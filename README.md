@@ -1,6 +1,3 @@
-Here is a detailed `README.md` for the instructions you provided:
-
-```markdown
 # Ollama Model Setup and HTTP Server Setup Guide
 
 This guide explains how to download Ollama models, run them, and set up a basic HTTP server to serve the model files.
