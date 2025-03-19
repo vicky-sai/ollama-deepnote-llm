@@ -47,7 +47,7 @@ Navigate to the Folder Containing the Model Files:
 Use the cd command to navigate to the folder where the model files were downloaded. For example:
 
 ```bash
-cd /path/to/ollama/models
+cd /path/to/ollama-sai
 ```
 Start the HTTP Server:
 Run the following command to start a basic HTTP server on port 8000:
