@@ -2,11 +2,22 @@
 
 This guide explains how to download Ollama models, run them, and set up a basic HTTP server to serve the model files.
 
+## Table of Contents
+1. [Prerequisites](#prerequisites)
+2. [Steps](#steps)
+   - [Step 1: Install Ollama](#step-1-install-ollama)
+   - [Step 2: Download the Model Files](#step-2-download-the-model-files)
+   - [Step 3: Set Up the HTTP Server](#step-3-set-up-the-http-server)
+   - [Step 4: Access the Model Files](#step-4-access-the-model-files)
+3. [Troubleshooting](#troubleshooting)
+4. [Conclusion](#conclusion)
+5. [License](#license)
+
 ## Prerequisites
 
 Before you begin, ensure you have the following installed:
 
-- **Ollama**: Ollama is used to run the model files.
+- **Ollama**: Ollama is used to run the model files. [Ollama installation guide](https://ollama.com/)
 - **Python 3**: You'll need Python 3 to set up the HTTP server.
 - **Terminal or Command Line Interface**: We will be running commands through the terminal.
 
