@@ -26,7 +26,6 @@ To download the model files, you need to run two different commands in two separ
 In your first terminal, run the following command:
 
 ```bash
-Copy
 ollama run gemma3:1b
 ```
 This will download the gemma3:1b model.
@@ -35,7 +34,6 @@ Terminal 2: Download the gemma3 Model
 In your second terminal, run the following command:
 
 ```bash
-Copy
 ollama run gemma3
 ```
 This will download the gemma3 model.
@@ -49,14 +47,12 @@ Navigate to the Folder Containing the Model Files:
 Use the cd command to navigate to the folder where the model files were downloaded. For example:
 
 ```bash
-Copy
 cd /path/to/ollama/models
 ```
 Start the HTTP Server:
 Run the following command to start a basic HTTP server on port 8000:
 
 ```bash
-Copy
 python3 -m http.server 8000
 ```
 
@@ -66,7 +62,6 @@ Step 4: Access the Model Files
 After starting the server, you can access the model files from your browser or other tools by navigating to:
 
 ```arduino
-Copy
 http://localhost:8000
 ```
 You can now interact with the model files via the HTTP server you've set up.
@@ -77,7 +72,6 @@ Ollama Command Not Found: If you encounter the error command not found: ollama, 
 Port 8000 Already in Use: If port 8000 is already in use by another process, you can specify a different port by changing the 8000 in the python3 -m http.server command. For example, use 8080:
 
 ```bash
-Copy
 python3 -m http.server 8080
 ```
 Conclusion
