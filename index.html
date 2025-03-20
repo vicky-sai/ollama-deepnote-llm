@@ -1,49 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neon Vicky Chat</title>
-     <link rel="stylesheet" href="style.css">
-     <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neon Vicky Chat</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-    <div class="header">
-        <img id="profile-pic" src="image.jpg" alt="Profile Picture" class="profile-pic">
-        <div class="title">Vicky Chat</div> &nbsp;&nbsp;&nbsp;&nbsp;
-        <select class="model-selector" id="model-selector">
-            <option value="llama3">Llama 3</option>
-            <option value="mistral">Mistral</option>
-            <option value="gemma">Gemma</option>
-            <option value="phi3">Phi-3</option>
-            <option value="custom">Custom</option>
-        </select>
+  <div class="header">
+    <img id="profile-pic" src="image.jpg" alt="Profile Picture" class="profile-pic">
+    <div class="title">Vicky Chat</div>&nbsp;&nbsp;&nbsp;&nbsp;
+    <select class="model-selector" id="model-selector">
+      <option value="llama3">Llama 3</option>
+      <option value="mistral">Mistral</option>
+      <option value="gemma">Gemma</option>
+      <option value="phi3">Phi-3</option>
+      <option value="custom">Custom</option>
+    </select>
+  </div>
+
+  <div class="chat-container" id="chat-container">
+    <div class="message bot-message">
+      Hello! I'm your local AI assistant powered by Ollama. How can I help you today?
     </div>
-    
-    <div class="chat-container" id="chat-container">
-        <div class="message bot-message">
-            Hello! I'm your local AI assistant powered by Ollama. How can I help you today?
-        </div>
-    </div>
-    
-    <div class="typing-indicator" id="typing-indicator">
-        <span></span>
-        <span></span>
-        <span></span>
-    </div>
-    
-    <div class="input-container">
-        <textarea class="message-input" id="message-input" placeholder="Ask me anything..." rows="1" autocomplete="off"></textarea>
-        <button class="send-button" id="send-button">
-            <svg class="send-icon" viewBox="0 0 24 24">
-                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
-            </svg>
-        </button>
-    </div>
-    
-    <div class="status-indicator" id="status-indicator">
-        <span class="status-offline">Offline</span>
-    </div>
-     <script src="script.js"></script>
+  </div>
+
+  <div class="typing-indicator" id="typing-indicator">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="input-container">
+    <textarea class="message-input" id="message-input" placeholder="Ask me anything..." rows="1" autocomplete="off"></textarea>
+    <button class="send-button" id="send-button">
+      <svg class="send-icon" viewBox="0 0 24 24">
+        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class="status-indicator" id="status-indicator">
+    <span class="status-offline">Offline</span>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
