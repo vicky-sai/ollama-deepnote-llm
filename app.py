@@ -1,3 +1,8 @@
+import os
+
+# Install Flask using pip
+os.system("pip install flask flask_cors")
+
 from flask import Flask, jsonify, render_template, request, Response
 from flask_cors import CORS
 import requests
