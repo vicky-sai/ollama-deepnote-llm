@@ -109,6 +109,21 @@ body::before {
     gap: 12px;
 }
 
+textarea.message-input {
+    resize: none;
+    overflow: hidden;
+    min-height: 24px;
+    line-height: 1.5;
+    padding: 8px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border-color);
+    background: var(--input-bg);
+    color: var(--text-color);
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+}
+
 .message-input {
     flex: 1;
     padding: 0.9rem 1.2rem;
@@ -206,8 +221,8 @@ body::before {
     50% { transform: translateY(-4px); }
 }
 
+/* Inline code block styles */
 code {
-    background-color: rgba(255, 255, 255, 0.15);
     color: #ffe6f0;
     padding: 3px 8px;
     border-radius: 5px;
@@ -215,6 +230,13 @@ code {
     font-size: 0.95em;
 }
 
+/* Code wrapper to position the copy button */
+.code-wrapper {
+    position: relative; /* Needed for absolute positioning of button */
+    margin: 1rem 0; /* Match your pre margin */
+}
+
+/* Preformatted code block styles */
 pre {
     background-color: rgba(20, 20, 40, 0.9);
     padding: 1rem;
@@ -223,6 +245,31 @@ pre {
     margin: 1rem 0;
     border-left: 3px solid var(--neon-blue);
     box-shadow: 0 2px 10px rgba(102, 230, 255, 0.1);
+    position: relative; /* Ensure stacking context */
+}
+
+
+/* Table styles */
+.styled-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+    font-size: 1em;
+    text-align: left;
+}
+.styled-table th, .styled-table td {
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+}
+.styled-table th {
+    background-color: #29374d;
+    color: #ffffff;
+}
+.styled-table tr:nth-child(even) {
+    background-color: #2e4057;
+}
+.styled-table tr:hover {
+    background-color: #3a4f6a;
 }
 
 strong {
@@ -266,4 +313,22 @@ ol li::marker {
 
 ::-webkit-scrollbar-thumb:hover {
     background: var(--neon-pink);
+}
+
+.styled-table {
+    border-collapse: collapse;
+    width: 60%;
+    margin-top: 12px;
+    margin-bottom: 12px;
+}
+
+.styled-table th, .styled-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.styled-table th {
+    background-color: #3d4e4f;
+    font-weight: bold;
 }

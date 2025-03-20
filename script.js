@@ -160,51 +160,223 @@ document.addEventListener('DOMContentLoaded', () => {
         let formattedText = text
             .replace(/</g, '&lt;') // Basic sanitization
             .replace(/>/g, '&gt;');
-
+    
+        // Apply inline formatting
         formattedText = formattedText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         formattedText = formattedText.replace(/\/\/(.*?)\/\//g, '<em>$1</em>');
         formattedText = formattedText.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
         formattedText = formattedText.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-        if (formattedText.includes('* ')) {
-            const lines = formattedText.split('\n');
-            let listItems = [];
-            let inList = false;
-
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i].trim();
-                if (line.startsWith('* ')) {
-                    const content = line.substring(2).trim();
-                    if (content && content !== ':') {
-                        listItems.push(content.includes(':') 
-                            ? `<li><code>${content.split(':')[0].trim()}</code> — ${content.split(':')[1].trim()}</li>`
-                            : `<li>${content}</li>`);
-                        inList = true;
+    
+        // Convert text to lines for processing
+        const lines = formattedText.split('\n');
+        const processedChunks = [];
+        let currentTextChunk = [];
+        let currentTableLines = [];
+        let inTable = false;
+    
+        // Process line by line to properly identify tables
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            const trimmedLine = line.trim();
+            
+            // Check if line is part of a table
+            if (trimmedLine.startsWith('|') && trimmedLine.endsWith('|')) {
+                if (!inTable) {
+                    // Starting a new table - push accumulated text first
+                    if (currentTextChunk.length > 0) {
+                        processedChunks.push({
+                            type: 'text',
+                            content: currentTextChunk.join('\n')
+                        });
+                        currentTextChunk = [];
                     }
-                } else if (inList) {
-                    formattedText = formattedText.replace(
-                        lines.slice(i - listItems.length, i).join('\n'),
-                        `<ul>${listItems.join('')}</ul>` // Use <ul> for bullets
-                    );
+                    inTable = true;
+                }
+                // Add to current table
+                currentTableLines.push(line);
+            } else {
+                if (inTable) {
+                    // End of table - process and add the table
+                    if (currentTableLines.length > 0) {
+                        processedChunks.push({
+                            type: 'table',
+                            content: currentTableLines
+                        });
+                        currentTableLines = [];
+                    }
+                    inTable = false;
+                }
+                // Add to text chunk
+                currentTextChunk.push(line);
+            }
+        }
+    
+        // Handle any remaining content
+        if (inTable && currentTableLines.length > 0) {
+            processedChunks.push({
+                type: 'table',
+                content: currentTableLines
+            });
+        } else if (currentTextChunk.length > 0) {
+            processedChunks.push({
+                type: 'text',
+                content: currentTextChunk.join('\n')
+            });
+        }
+    
+        // Process each chunk
+        let result = '';
+        for (const chunk of processedChunks) {
+            if (chunk.type === 'text') {
+                // Process lists in text chunks
+                let textContent = processLists(chunk.content);
+                result += textContent;
+            } else if (chunk.type === 'table') {
+                // Process table chunk
+                result += processTable(chunk.content);
+            }
+        }
+    
+        // Convert remaining newlines to <br> tags
+        return result.replace(/\n/g, '<br>');
+    }
+    
+    // Process unordered lists
+    function processLists(text) {
+        if (!text.includes('* ')) return text;
+        
+        const lines = text.split('\n');
+        let processedLines = [];
+        let listItems = [];
+        let inList = false;
+        
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (line.startsWith('* ')) {
+                const content = line.substring(2).trim();
+                if (content && content !== ':') {
+                    listItems.push(content.includes(':') 
+                        ? `<li><code>${content.split(':')[0].trim()}</code> — ${content.split(':')[1].trim()}</li>`
+                        : `<li>${content}</li>`);
+                    inList = true;
+                }
+            } else {
+                if (inList) {
+                    processedLines.push(`<ul>${listItems.join('')}</ul>`);
                     listItems = [];
                     inList = false;
                 }
-            }
-
-            if (listItems.length) {
-                formattedText = formattedText.replace(
-                    lines.slice(-listItems.length).join('\n'),
-                    `<ul>${listItems.join('')}</ul>`
-                );
+                processedLines.push(lines[i]);
             }
         }
-
-        return formattedText.replace(/\n/g, '<br>');
+        
+        if (listItems.length) {
+            processedLines.push(`<ul>${listItems.join('')}</ul>`);
+        }
+        
+        return processedLines.join('\n');
     }
+    
+    // Process Markdown tables into HTML tables
+    function processTable(tableLines) {
+        if (!Array.isArray(tableLines) || tableLines.length === 0) return '';
+    
+        // Create a table with proper class for styling
+        let tableHTML = '<table class="styled-table">';
+        
+        let headerProcessed = false;
+        
+        for (let i = 0; i < tableLines.length; i++) {
+            const line = tableLines[i];
+            
+            // Skip separator line (contains only | and -)
+            if (line.replace(/\|/g, '').trim().replace(/-/g, '').replace(/:/g, '').trim() === '') {
+                headerProcessed = true;
+                continue;
+            }
+            
+            const cells = line.split('|');
+            // Filter out empty cells at beginning and end (from | at edges)
+            const filteredCells = [];
+            for (let j = 0; j < cells.length; j++) {
+                if (j === 0 || j === cells.length - 1) {
+                    if (cells[j].trim() !== '') {
+                        filteredCells.push(cells[j]);
+                    }
+                } else {
+                    filteredCells.push(cells[j]);
+                }
+            }
+            
+            // Determine if this is a header row
+            const isHeader = !headerProcessed && (i === 0 || 
+                (i === 1 && tableLines[1] && tableLines[1].replace(/\|/g, '').trim().replace(/-/g, '').replace(/:/g, '').trim() === ''));
+            
+            tableHTML += '<tr>';
+            filteredCells.forEach(cell => {
+                const tag = isHeader ? 'th' : 'td';
+                tableHTML += `<${tag}>${cell.trim()}</${tag}>`;
+            });
+            tableHTML += '</tr>';
+        }
+        
+        tableHTML += '</table>';
+        return tableHTML;
+    }
+    
+    // When DOM content is loaded, process all code blocks to add copy buttons
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize code copy functionality
+        initCodeCopy();
+        
+        // For dynamic messages, you'll need to call this after adding new messages
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.addedNodes.length) {
+                    enhanceCodeBlocks();
+                }
+            });
+        });
+        
+        // Start observing the chat container for added messages
+        const chatContainer = document.querySelector('.chat-container');
+        if (chatContainer) {
+            observer.observe(chatContainer, { childList: true, subtree: true });
+        }
+    });
+    
+    
 
     // Event listeners
     sendButton.addEventListener('click', sendMessage);
-    messageInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') sendMessage();
+    messageInput.addEventListener('keydown', (e) => {
+        // Check if it's Ctrl+Enter (or Cmd+Enter for Mac)
+        if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+            // Insert a newline character at the cursor position
+            const cursorPosition = messageInput.selectionStart;
+            const currentValue = messageInput.value;
+            
+            // Insert newline at cursor position
+            messageInput.value = 
+                currentValue.substring(0, cursorPosition) + 
+                '\n' + 
+                currentValue.substring(cursorPosition);
+            
+            // Set cursor position after the inserted newline
+            messageInput.selectionStart = cursorPosition + 1;
+            messageInput.selectionEnd = cursorPosition + 1;
+            
+            // Auto-resize if it's a textarea
+            if (messageInput.tagName.toLowerCase() === 'textarea') {
+                autoResizeTextarea(messageInput);
+            }
+            
+            // Prevent default behavior
+            e.preventDefault();
+        } else if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.shiftKey) {
+            // Regular Enter key without modifiers sends the message
+            sendMessage();
+            e.preventDefault();
+        }
     });
 });
