@@ -16,6 +16,15 @@ This guide will walk you through the setup process to get the project running.
    ```
 
    This will download and install Ollama on your system.
+   Then download necessary model as required. Refer to https://ollama.com/search for details.
+    
+   ```bash
+      ollama run gemma3:1b
+   ```
+   Add your origins here
+   ```bash
+   OLLAMA_ORIGINS="https://7bc0ab74-f100-4960-b285-dc5686265703.deepnoteproject.com,http://127.0.0.1,http://127.0.0.1/*,https://*,http://*,http://localhost,https://localhost,http://127.0.0.1,https://127.0.0.1,http://0.0.0.0,https://0.0.0.0" ollama serve
+   ```
 
 ### 3. Save Files in Folder
    - Ensure that all project files are saved in the appropriate folder for your project.
